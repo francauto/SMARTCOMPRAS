@@ -17,6 +17,7 @@ app.use(
       "https://smartsandbox.francautolabs.com.br",
       "https://smartcompras.francautolabs.com.br",
       "https://sandboxsmart.francautolabs.com.br",
+      "http://211.2.100.245:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
