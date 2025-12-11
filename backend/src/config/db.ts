@@ -7,11 +7,11 @@ dotenv.config();
 const poolOptions: PoolOptions = {
   host: process.env.MYSQL_HOST,
   port: parseInt(process.env.MYSQL_PORT || "3311", 10),
-  user: process.env.MYSQL_USER,
+  user: process.env.DB_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
   waitForConnections: true,
-  charset: 'utf8mb4',
+  charset: "utf8mb4",
   connectionLimit: 10,
   queueLimit: 0,
   decimalNumbers: true,
