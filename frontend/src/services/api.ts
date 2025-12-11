@@ -6,7 +6,7 @@ export const api = axios.create({
   baseURL:
     process.env.NODE_ENV === "development"
       ? "/api"
-      : process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
+      : process.env.NEXT_PUBLIC_API_URL || "https://apismartcompras.francautolabs.com.br",
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",
