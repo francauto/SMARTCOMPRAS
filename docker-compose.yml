@@ -46,8 +46,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./backend/uploads:/app/uploads
-      - ./backend/pdfs:/app/pdfs
+      - backend_uploads:/app/uploads
+      - backend_pdfs:/app/pdfs
     networks:
       - smartcompras-network
     depends_on:
@@ -80,4 +80,8 @@ networks:
 
 volumes:
   mysql_data:
+    driver: local
+  backend_uploads:
+    driver: local
+  backend_pdfs:
     driver: local

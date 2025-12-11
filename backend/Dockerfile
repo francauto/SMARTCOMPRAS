@@ -70,8 +70,9 @@ COPY --from=builder /app/dist ./dist
 # Copia arquivos necessários
 COPY --from=builder /app/package*.json ./
 
-# Cria diretórios para uploads e PDFs
+# Cria diretórios para uploads e PDFs com permissões adequadas
 RUN mkdir -p uploads pdfs && \
+    chmod -R 777 uploads pdfs && \
     chown -R backenduser:nodejs /app
 
 # Muda para usuário não-root
