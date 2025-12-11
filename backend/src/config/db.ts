@@ -6,8 +6,8 @@ dotenv.config();
 
 const poolOptions: PoolOptions = {
   host: process.env.MYSQL_HOST,
-  port: parseInt(process.env.MYSQL_PORT || "3311", 10),
-  user: process.env.DB_USER,
+  port: parseInt(process.env.MYSQL_PORT || "3306", 10),
+  user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
   waitForConnections: true,
