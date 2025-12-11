@@ -1,0 +1,39 @@
+# ============================================
+# DOCKERFILE DE DESENVOLVIMENTO - BACKEND
+# ============================================
+
+FROM node:22-alpine AS development
+
+WORKDIR /app
+
+# Instala dependências do sistema necessárias
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+# Configura Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
+    NODE_ENV=development
+
+# Copia package files
+COPY package*.json ./
+
+# Instala TODAS as dependências (incluindo dev)
+RUN npm install
+
+# Copia código fonte
+COPY . .
+
+# Cria diretórios
+RUN mkdir -p uploads pdfs
+
+# Expõe porta
+EXPOSE 3000
+
+# Comando padrão (pode ser sobrescrito no docker-compose)
+CMD ["npm", "run", "dev"]

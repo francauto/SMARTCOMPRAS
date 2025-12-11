@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    deploy:
+      resources:
+        limits:
+          memory: "${MEMORY_LIMIT:-2G}"
+        reservations:
+          memory: "${MEMORY_RESERVATION:-512M}"
+    restart: unless-stopped

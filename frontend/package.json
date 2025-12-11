@@ -1,0 +1,36 @@
+{
+  "name": "smartcompras-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev -p 5173",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.15",
+    "@mui/material": "^5.15.15",
+    "axios": "^1.6.8",
+    "framer-motion": "^11.1.7",
+    "moment": "^2.30.1",
+    "next": "^16.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.2.1",
+    "react-number-format": "^5.3.4",
+    "recharts": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/moment": "^2.11.29",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.21",
+    "cross-env": "^10.1.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "smartcompras-frontend",
+  "type": "docker-compose",
+  "repository": "https://github.com/francauto/SMARTCOMPRAS-frontend-next.git",
+  "branch": "main",
+  "buildConfig": {
+    "dockerfile": "Dockerfile",
+    "context": ".",
+    "buildArgs": {
+      "GIT_REPO_URL": "${GIT_REPO_URL}",
+      "GIT_BRANCH": "${GIT_BRANCH}"
+    }
+  },
+  "runtime": {
+    "startCommand": "node server.js",
+    "workingDirectory": "/app",
+    "port": 3000,
+    "healthcheck": {
+      "test": "curl -f http://localhost:3000/ || exit 1",
+      "interval": "30s",
+      "timeout": "10s",
+      "retries": 3,
+      "startPeriod": "40s"
+    }
+  },
+  "resources": {
+    "memory": {
+      "limit": "2G",
+      "reservation": "512M"
+    }
+  },
+  "environment": {
+    "required": [
+      "GIT_REPO_URL",
+      "GIT_BRANCH",
+      "NODE_ENV",
+      "NEXT_PUBLIC_API_URL"
+    ],
+    "optional": ["PORT", "MEMORY_LIMIT", "MEMORY_RESERVATION"]
+  }
+}

@@ -1,0 +1,62 @@
+# ============================================
+# .dockerignore - Backend
+# ============================================
+
+# Dependencies
+node_modules
+npm-debug.log
+
+# Build
+dist
+build
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Development
+src/**/*.test.ts
+src/**/*.spec.ts
+*.test.ts
+*.spec.ts
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Logs
+logs
+*.log
+
+# Uploads (será criado no container)
+uploads/*
+!uploads/.gitkeep
+
+# PDFs (será criado no container)
+pdfs/*
+!pdfs/.gitkeep
+
+# Database dumps
+*.sql
+*.dump
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Documentation
+README.md
+*.md
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,49 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*pdfs
+
+# Editor & system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage reports
+coverage/
+
+# Optional lock files (caso queira ignorar)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Docker
+docker-compose.override.yml
+
+*.sql
+

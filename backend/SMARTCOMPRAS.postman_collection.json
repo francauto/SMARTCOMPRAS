@@ -1,0 +1,3814 @@
+{
+  "info": {
+    "_postman_id": "ed07f91c-d6eb-4479-9978-675a041ccc89",
+    "name": "SMARTCOMPRAS API",
+    "description": "Collection completa para testar todas as rotas do projeto SMARTCOMPRAS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31181414",
+    "_collection_link": "https://francauto.postman.co/workspace/SMARTCOMPRAS---BACKEND~7918f8bb-07f0-49bd-b69d-b7de84be79bc/collection/31181414-ed07f91c-d6eb-4479-9978-675a041ccc89?action=share&source=collection_link&creator=31181414"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "API Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api",
+              "host": ["{{base_url}}"],
+              "path": ["api"]
+            },
+            "description": "Verifica se a API está online"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João\",\n  \"sobrenome\": \"Silva\",\n  \"usuario\": \"joao.silva\",\n  \"senha\": \"senha123\",\n  \"mail\": \"joao.silva@example.com\",\n  \"cargo\": \"Vendedor\",\n  \"telefone\": \"11999999999\",\n  \"id_departamento\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Registra um novo usuário no sistema"
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Salva o token do cookie automaticamente",
+                  "if (pm.response.headers.has('set-cookie')) {",
+                  "    const cookies = pm.response.headers.get('set-cookie');",
+                  "    console.log('Cookies recebidos:', cookies);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"joao.silva\",\n  \"senha\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Realiza login e recebe token JWT via cookie"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "profile"]
+            },
+            "description": "Retorna os dados do perfil do usuário autenticado (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"senhaAntiga\": \"senha123\",\n  \"novaSenha\": \"novaSenha456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "change-password"]
+            },
+            "description": "Altera a senha do usuário autenticado (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Request Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao.silva@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/password-reset",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "password-reset"]
+            },
+            "description": "Solicita código de recuperação de senha via email"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Reset Code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/password-reset/:codigo",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "password-reset", ":codigo"],
+              "variable": [
+                {
+                  "key": "codigo",
+                  "value": "123456",
+                  "description": "Código de 6 dígitos recebido por email"
+                }
+              ]
+            },
+            "description": "Verifica se o código de recuperação é válido"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao.silva@example.com\",\n  \"codigo\": \"123456\",\n  \"novaSenha\": \"novaSenha789\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/password-reset/new",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "password-reset", "new"]
+            },
+            "description": "Define uma nova senha usando o código de recuperação"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Realiza logout e limpa o cookie de autenticação"
+          },
+          "response": []
+        },
+        {
+          "name": "Autorizar Whatsapp",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"telefone\": \"\", //Telefone\r\n    \"aut_wpp\": 0   //Boolean\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/whatsapp-config",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "whatsapp-config"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estoque",
+      "item": [
+        {
+          "name": "Get Requisições (Por Solicitante)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/estoque/requisicoes?page=1&pageSize=20&search=&dataInicio=&status=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estoque", "requisicoes"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número da página (padrão: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Quantidade de itens por página (padrão: 20)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Pesquisa global (nome solicitante, fornecedor, itens, ID)"
+                },
+                {
+                  "key": "dataInicio",
+                  "value": "",
+                  "description": "Data inicial (formato: YYYY-MM-DD) - filtra por data_requisicao >= dataInicio"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Status da requisição (Pendente, Aprovada, Reprovada)"
+                }
+              ]
+            },
+            "description": "Busca requisições de estoque do solicitante com **paginação e filtros** (requer autenticação).\n\n**Query Parameters:**\n- `page`: Página atual (padrão: 1)\n- `pageSize`: Itens por página (padrão: 20)\n- `search`: Busca em nome, fornecedor, itens, ID\n- `dataInicio`: Data >= YYYY-MM-DD\n- `status`: Pendente, Aprovada, Reprovada\n\n**Resposta:**\n```json\n{\n  \"data\": [{\n    \"id\": 1,\n    \"fornecedor\": \"Fornecedor ABC\",\n    \"descricao\": \"10x Peça XYZ - R$15.05\",\n    \"valor_custo\": 325.50,\n    \"itens\": [{\"id\": 1, \"descricao\": \"Peça XYZ\", \"qtde\": 10, \"valor_unitario\": 15.05}]\n  }],\n  \"total\": 45,\n  \"page\": 1,\n  \"pageSize\": 20,\n  \"totalPages\": 3,\n  \"filtros\": {\"search\": \"João\", \"status\": \"Aprovada\"}\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisições (Por Aprovador)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/estoque/requisicoes-aprovador?page=1&pageSize=20&search=&dataInicio=&status=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estoque", "requisicoes-aprovador"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número da página (padrão: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Quantidade de itens por página (padrão: 20)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Pesquisa global (nome solicitante, fornecedor, itens, ID)"
+                },
+                {
+                  "key": "dataInicio",
+                  "value": "",
+                  "description": "Data inicial (formato: YYYY-MM-DD) - filtra por data_requisicao >= dataInicio"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Status da requisição (Pendente, Aprovada, Reprovada)"
+                }
+              ]
+            },
+            "description": "Busca requisições para aprovação com **paginação e filtros** (requer autenticação).\n\nMesma estrutura de resposta paginada do endpoint 'Por Solicitante'."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisição Por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/estoque/requisicao?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estoque", "requisicao"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "ID da requisição"
+                }
+              ]
+            },
+            "description": "Busca uma requisição específica por ID com todos os detalhes incluindo array de itens.\n\nRetorna objeto único com mesma estrutura dos endpoints de listagem."
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Requisição",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fornecedor\": \"Fornecedor ABC\",\n  \"Itens\": [\n    {\n      \"descricao\": \"Peça XYZ\",\n      \"qtde\": 10,\n      \"valor_unitario\": 15.05\n    },\n    {\n      \"descricao\": \"Peça ABC\",\n      \"qtde\": 5,\n      \"valor_unitario\": 30.00\n    }\n  ],\n  \"cliente_venda\": \"Cliente DEF\",\n  \"cod_cliente\": \"CLI001\",\n  \"valor_venda\": 500.00,\n  \"id_aprovador\": 2,\n  \"entrega_direta\": false,\n  \"valor_frete\": 25.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/estoque/requisicao",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estoque", "requisicao"]
+            },
+            "description": "Cria uma nova requisição de estoque com múltiplos itens (requer autenticação).\n\n**Nova estrutura normalizada:**\n- Cada requisição pode ter múltiplos itens\n- Cada item possui: descricao, qtde e valor_unitario\n- O valor_custo_total é calculado automaticamente: SUM(qtde * valor_unitario) + valor_frete\n\n**Campos obrigatórios:**\n- fornecedor: Nome do fornecedor\n- Itens: Array com pelo menos 1 item\n  - descricao: Descrição do item\n  - qtde: Quantidade (maior que 0)\n  - valor_unitario: Valor unitário (maior que 0)\n- cliente_venda: Nome do cliente\n- cod_cliente: Código do cliente\n- valor_venda: Valor de venda\n- id_aprovador: ID do aprovador\n- entrega_direta: Boolean (entrega direta ao cliente?)\n- valor_frete: Valor do frete\n\n**Cálculo automático:**\n- valor_custo_total = (10 × 15.05) + (5 × 30.00) + 25.00 = 325.50\n\n**Resposta:**\nRetorna array de itens estruturado junto com a requisição:\n```json\n{\n  \"id\": 1,\n  \"fornecedor\": \"Fornecedor ABC\",\n  \"descricao\": \"10x Peça XYZ - R$15.05, 5x Peça ABC - R$30\",\n  \"valor_custo\": 325.50,\n  \"valor_custo_total\": 325.50,\n  \"valor_frete\": 25.00,\n  \"itens\": [\n    {\"id\": 1, \"descricao\": \"Peça XYZ\", \"qtde\": 10, \"valor_unitario\": 15.05},\n    {\"id\": 2, \"descricao\": \"Peça ABC\", \"qtde\": 5, \"valor_unitario\": 30.00}\n  ]\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Aprovar/Reprovar Requisição",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_requisicao\": 1,\n  \"aprovado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/estoque/requisicao/resposta",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estoque", "requisicao", "resposta"]
+            },
+            "description": "Aprova ou reprova uma requisição de estoque (requer autenticação). Use 'aprovado: true' para aprovar ou 'aprovado: false' para reprovar."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Get Requisições (Por Solicitante)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/requisicoes?page=1&pageSize=20&search=&dataInicio=&status=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", "requisicoes"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número da página (padrão: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Quantidade de itens por página (padrão: 20)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Pesquisa global (nome solicitante, descrição, valor, ID)"
+                },
+                {
+                  "key": "dataInicio",
+                  "value": "",
+                  "description": "Data inicial (formato: YYYY-MM-DD) - filtra por data_solicitacao >= dataInicio"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Status da requisição (Pendente, Aprovada, Reprovada)"
+                }
+              ]
+            },
+            "description": "Busca requisições de cliente com **paginação e filtros**.\n\n**Resposta paginada:**\n```json\n{\n  \"data\": [...],\n  \"total\": 30,\n  \"page\": 1,\n  \"pageSize\": 20,\n  \"totalPages\": 2,\n  \"filtros\": {}\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisições (Por Aprovador)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/requisicoes-aprovador?page=1&pageSize=20&search=&dataInicio=&status=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", "requisicoes-aprovador"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número da página (padrão: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Quantidade de itens por página (padrão: 20)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Pesquisa global (nome solicitante, descrição, valor, ID)"
+                },
+                {
+                  "key": "dataInicio",
+                  "value": "",
+                  "description": "Data inicial (formato: YYYY-MM-DD) - filtra por data_solicitacao >= dataInicio"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Status da requisição (Pendente, Aprovada, Reprovada)"
+                }
+              ]
+            },
+            "description": "Busca requisições de cliente para aprovação com **paginação e filtros**."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisição Por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/requisicao?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", "requisicao"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "ID da requisição"
+                }
+              ]
+            },
+            "description": "Busca uma requisição de cliente específica por ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Requisição",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descricao\": \"Abertura de nova conta para cliente XYZ\",\n  \"valor\": 1500.00,\n  \"id_aprovador\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/clientes/requisicao",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", "requisicao"]
+            },
+            "description": "Cria uma nova requisição de cliente (requer autenticação, id_solicitante é obtido do token)"
+          },
+          "response": []
+        },
+        {
+          "name": "Aprovar/Reprovar Requisição",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_requisicao\": 1,\n  \"aprovado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/clientes/requisicao/resposta",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", "requisicao", "resposta"]
+            },
+            "description": "Aprova ou reprova uma requisição de cliente (requer autenticação). Use 'aprovado: true' para aprovar ou 'aprovado: false' para reprovar. **Gera hash automaticamente na aprovação**."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Combustível Estoque",
+      "item": [
+        {
+          "name": "Get Requisições (Por Solicitante)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/combustivel-estoque/requisicoes?page=1&pageSize=20&search=&dataInicio=&status=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "combustivel-estoque", "requisicoes"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número da página (padrão: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Quantidade de itens por página (padrão: 20)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Pesquisa global (nome, chassi, modelo, marca, placa, tipo combustível, departamento, ID)"
+                },
+                {
+                  "key": "dataInicio",
+                  "value": "",
+                  "description": "Data inicial (formato: YYYY-MM-DD) - filtra por data_solicitacao >= dataInicio"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Status da requisição (Pendente, Aprovada, Reprovada)"
+                }
+              ]
+            },
+            "description": "Busca requisições de combustível com **paginação e filtros**.\n\n**Pesquisa abrangente:** chassi, modelo, marca, placa, tipo combustível, departamento."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisições (Por Aprovador)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/combustivel-estoque/requisicoes-aprovador?page=1&pageSize=20&search=&dataInicio=&status=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "combustivel-estoque", "requisicoes-aprovador"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número da página (padrão: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Quantidade de itens por página (padrão: 20)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Pesquisa global (nome, chassi, modelo, marca, placa, tipo combustível, departamento, ID)"
+                },
+                {
+                  "key": "dataInicio",
+                  "value": "",
+                  "description": "Data inicial (formato: YYYY-MM-DD) - filtra por data_solicitacao >= dataInicio"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Status da requisição (Pendente, Aprovada, Reprovada)"
+                }
+              ]
+            },
+            "description": "Busca requisições de combustível para aprovação com **paginação e filtros**."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisição Por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/combustivel-estoque/requisicao?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "combustivel-estoque", "requisicao"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "ID da requisição"
+                }
+              ]
+            },
+            "description": "Busca uma requisição de combustível para estoque específica por ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Requisição",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chassi\": \"ABC123\",\n  \"placa\": \"ABC1D23\",\n  \"modelo\": \"Corolla\",\n  \"marca\": \"Toyota\",\n  \"quantidade_litros\": 50.00,\n  \"tipo_combustivel\": \"Gasolina\",\n  \"id_aprovador\": 2,\n  \"id_departamento\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/combustivel-estoque/requisicao",
+              "host": ["{{base_url}}"],
+              "path": ["api", "combustivel-estoque", "requisicao"]
+            },
+            "description": "Cria uma nova requisição de combustível para estoque. **Obrigatório fornecer chassi OU placa**. (id_solicitante é obtido do token)"
+          },
+          "response": []
+        },
+        {
+          "name": "Aprovar/Reprovar Requisição",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_requisicao\": 1,\n  \"aprovado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/combustivel-estoque/requisicao/resposta",
+              "host": ["{{base_url}}"],
+              "path": ["api", "combustivel-estoque", "requisicao", "resposta"]
+            },
+            "description": "Aprova ou reprova uma requisição de combustível para estoque (requer autenticação). Use 'aprovado: true' para aprovar ou 'aprovado: false' para reprovar. **Gera hash automaticamente na aprovação**."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "usuarios"]
+            },
+            "description": "Lista todos os usuários do sistema com todas as informações. **Requer autenticação e cargo de administrador (admfun, admger ou admdir)**"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João\",\n  \"sobrenome\": \"Silva Santos\",\n  \"usuario\": \"joao.silva\",\n  \"mail\": \"joao.silva@francauto.com.br\",\n  \"cargo\": \"Gerente\",\n  \"telefone\": \"11988887777\",\n  \"id_departamento\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/usuarios/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "usuarios", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "ID do usuário a ser atualizado"
+                }
+              ]
+            },
+            "description": "Atualiza qualquer campo do usuário **exceto a senha**. Para resetar a senha, use o endpoint específico. **Requer autenticação e cargo de administrador (admfun, admger ou admdir)**"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Senha Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/usuarios/:id/reset-senha",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "usuarios", ":id", "reset-senha"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "ID do usuário que terá a senha resetada"
+                }
+              ]
+            },
+            "description": "Reseta a senha do usuário para o valor padrão: **Tr0c@r123**. O usuário deverá alterar a senha no próximo login. **Requer autenticação e cargo de administrador (admfun, admger ou admdir)**"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Despesas",
+      "item": [
+        {
+          "name": "Get Requisições (Por Solicitante)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/despesas/requisicoes?page=1&pageSize=20&search=&dataInicio=&status=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "despesas", "requisicoes"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número da página (padrão: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Itens por página (padrão: 20)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Pesquisa global (nome solicitante, descrição, ID, departamento)"
+                },
+                {
+                  "key": "dataInicio",
+                  "value": "",
+                  "description": "Data inicial (formato: YYYY-MM-DD) - filtra por data_requisicao >= dataInicio"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Status da requisição (Pendente, Aprovada, Reprovada)"
+                }
+              ]
+            },
+            "description": "Busca requisições de despesas com **paginação e filtros** (requer autenticação).\n\n**Query Parameters:**\n- `page`: Página (padrão: 1)\n- `pageSize`: Itens por página (padrão: 20)\n- `search`: Busca em nome, descrição, ID, departamento\n- `dataInicio`: Data >= YYYY-MM-DD\n- `status`: Pendente, Aprovada, Reprovada\n\n**Resposta:**\n```json\n{\n  \"data\": [...],\n  \"total\": 150,\n  \"page\": 1,\n  \"pageSize\": 20,\n  \"totalPages\": 8,\n  \"filtros\": {\"search\": \"João\", \"status\": \"Aprovada\"}\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisições (Por Aprovador)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/despesas/requisicoes-aprovador?page=1&pageSize=20&search=&dataInicio=&status=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "despesas", "requisicoes-aprovador"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número da página (padrão: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Itens por página (padrão: 20)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Pesquisa global (nome solicitante, descrição, ID, departamento)"
+                },
+                {
+                  "key": "dataInicio",
+                  "value": "",
+                  "description": "Data inicial (formato: YYYY-MM-DD) - filtra por data_requisicao >= dataInicio"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Status da requisição (Pendente, Aprovada, Reprovada)"
+                }
+              ]
+            },
+            "description": "Busca requisições de despesas para aprovação com **paginação e filtros**.\n\n**Otimizações:**\n- JSON_ARRAYAGG elimina problema N+1\n- Query única para gerentes e departamentos\n\n**Resposta:**\n```json\n{\n  \"data\": [{\n    \"id_requisicao\": 1,\n    \"descricao\": \"...\",\n    \"gerentes\": [...],\n    \"departamentos\": [...]\n  }],\n  \"total\": 150,\n  \"page\": 1,\n  \"pageSize\": 20,\n  \"totalPages\": 8,\n  \"filtros\": {}\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisição Por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/despesas/requisicao?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "despesas", "requisicao"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "ID da requisição de despesa"
+                }
+              ]
+            },
+            "description": "Busca uma requisição específica com todos os detalhes: dados da requisição, fornecedores, itens, valores e departamentos com rateio."
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Solicitação de Despesa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descricao\": \"Compra de material de escritório\",\n  \"id_diretor\": 3,\n  \"fornecedores\": [\n    {\n      \"nome\": \"Papelaria Central\",\n      \"itens\": [\n        {\n          \"descricao_item\": \"Canetas azuis\",\n          \"qtde\": 100,\n          \"valor_unitario\": 2.50\n        },\n        {\n          \"descricao_item\": \"Resmas de papel A4\",\n          \"qtde\": 50,\n          \"valor_unitario\": 25.00\n        }\n      ]\n    },\n    {\n      \"nome\": \"Tech Office\",\n      \"itens\": [\n        {\n          \"descricao_item\": \"Mouse sem fio\",\n          \"qtde\": 10,\n          \"valor_unitario\": 45.00\n        }\n      ]\n    }\n  ],\n  \"departamentos\": [\n    {\n      \"id_departamento\": 1,\n      \"percentual_rateio\": 60\n    },\n    {\n      \"id_departamento\": 2,\n      \"percentual_rateio\": 40\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/despesas/requisicao",
+              "host": ["{{base_url}}"],
+              "path": ["api", "despesas", "requisicao"]
+            },
+            "description": "Cria uma nova solicitação de despesa com múltiplos fornecedores, itens e rateio entre departamentos. O sistema:\n- Valida se todos os departamentos possuem gerentes atribuídos\n- Verifica se a soma dos percentuais de rateio é igual a 100%\n- Cria os fornecedores automaticamente se não existirem\n- Relaciona itens com fornecedores e calcula totais\n- Envia notificações automáticas por email e WhatsApp para os aprovadores (gerentes e diretor)\n\nCampos obrigatórios:\n- descricao: Descrição da despesa\n- id_diretor: ID do diretor que aprovará\n- fornecedores: Array com pelo menos 1 fornecedor\n- departamentos: Array com pelo menos 1 departamento (soma de percentual_rateio = 100%)\n\nCada fornecedor deve ter:\n- nome: Nome do fornecedor\n- itens: Array com pelo menos 1 item\n\nCada item deve ter:\n- descricao_item: Descrição do item\n- qtde: Quantidade (maior que 0)\n- valor_unitario: Valor unitário (maior que 0)\n\nCada departamento deve ter:\n- id_departamento: ID do departamento\n- percentual_rateio: Percentual de rateio (soma total = 100%)"
+          },
+          "response": []
+        },
+        {
+          "name": "Aprovar Cota - Gerente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_cota\": 1,\n  \"id_requisicao\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/despesas/cota/aprovar-gerente",
+              "host": ["{{base_url}}"],
+              "path": ["api", "despesas", "cota", "aprovar-gerente"]
+            },
+            "description": "Permite que um gerente aprove uma cota específica de uma requisição. O fluxo de aprovação funciona assim:\n\n**Validações:**\n- A cota deve existir\n- O gerente não pode aprovar a mesma cota duas vezes\n- Não pode existir outra cota já aprovada para a mesma requisição\n\n**Processo:**\n1. Registra a aprovação do gerente na tabela `aprovacao_gerente`\n2. Atualiza o status da cota para 'Aprovada'\n3. Rejeita automaticamente as outras cotas da mesma requisição\n4. Quando TODOS os gerentes aprovarem:\n   - Marca a cota como `aprovado_por_gerente = TRUE`\n   - Envia notificação ao diretor por email e WhatsApp\n\n**Campos obrigatórios:**\n- id_cota: ID da cota a ser aprovada\n- id_requisicao: ID da requisição\n\nO ID do gerente é obtido automaticamente do usuário autenticado."
+          },
+          "response": []
+        },
+        {
+          "name": "Aprovar Cota - Diretor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_requisicao\": 1,\n  \"id_cota\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/despesas/cota/aprovar-diretor",
+              "host": ["{{base_url}}"],
+              "path": ["api", "despesas", "cota", "aprovar-diretor"]
+            },
+            "description": "Permite que o diretor aprove uma cota que já foi aprovada por TODOS os gerentes. Esta é a aprovação final da requisição.\n\n**Validações:**\n- A cota deve existir e pertencer à requisição informada\n- A cota deve ter sido aprovada por todos os gerentes (`aprovado_por_gerente = TRUE`)\n- O status da cota deve ser 'Aprovada'\n- A requisição não pode ter sido aprovada anteriormente pelo diretor\n\n**Processo:**\n1. Marca a cota como `aprovado_por_diretor = TRUE`\n2. Atualiza a requisição:\n   - Define `id_cota_aprovada_diretor` com o ID da cota aprovada\n   - Marca `aprovado_diretor = TRUE`\n   - Registra `data_aprovacao_diretor` com timestamp atual\n   - Altera o `status` da requisição para 'Aprovada'\n\n**Campos obrigatórios:**\n- id_requisicao: ID da requisição\n- id_cota: ID da cota a ser aprovada\n\nO ID do diretor é obtido automaticamente do usuário autenticado.\n\n**Importante:** Apenas uma cota pode ser aprovada por requisição. Uma vez aprovada pelo diretor, a requisição é finalizada."
+          },
+          "response": []
+        },
+        {
+          "name": "Recusar Cota",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_requisicao\": 1,\n  \"id_cota\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/despesas/cota/recusar",
+              "host": ["{{base_url}}"],
+              "path": ["api", "despesas", "cota", "recusar"]
+            },
+            "description": "Permite que um gerente ou diretor recuse uma cota de uma requisição. A recusa pode ser feita por:\n- **Gerentes:** Podem recusar qualquer cota antes dela ser aprovada\n- **Diretores e Administradores:** Podem recusar até mesmo cotas já aprovadas\n\n**Validações:**\n- A cota deve existir e pertencer à requisição informada\n- Usuário deve ter cargo adequado (ger, admger, dir, admdir)\n- Se a cota já foi aprovada, apenas diretores e administradores podem recusar\n\n**Processo:**\n1. Verifica o cargo do usuário no banco de dados\n2. Valida se a cota existe\n3. Marca a cota específica como 'Rejeitada'\n4. Rejeita automaticamente todas as outras cotas da mesma requisição\n5. Se TODAS as cotas foram rejeitadas:\n   - Marca a requisição com `status = 'Reprovada'`\n   - Registra o `usuario_recusador` (quem rejeitou)\n   - Registra a `data_recusa` com timestamp atual\n\n**Campos obrigatórios:**\n- id_requisicao: ID da requisição\n- id_cota: ID da cota a ser recusada\n\nO ID do usuário é obtido automaticamente do token de autenticação.\n\n**Importante:** Quando todas as cotas são rejeitadas, a requisição inteira é marcada como 'Reprovada' e o processo é encerrado."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Frota - Combustível",
+      "item": [
+        {
+          "name": "Enviar Solicitação de Frota",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"veiculo\": 1,\n  \"km\": 15000,\n  \"litro\": 50,\n  \"id_aprovador\": 2,\n  \"id_solicitante\": 1,\n  \"tipo_combustivel\": \"Gasolina\",\n  \"departamento\": 1,\n  \"tanquecheio\": true,\n  \"placa\": \"ABC-1234\",\n  \"modelo\": \"Civic\",\n  \"marca\": \"Honda\",\n  \"ano\": 2023\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/frota/sendFrotaRequest",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frota", "sendFrotaRequest"]
+            },
+            "description": "Cria uma nova solicitação de abastecimento de frota.\n\n**Validações:**\n- Verifica se o veículo já existe no banco (por ID ou id_veiculo_bd)\n- Se não existir, cadastra o veículo automaticamente\n- Valida se o KM informado é maior que o último KM registrado\n- Cria solicitação no BestDrive\n\n**Processo:**\n1. Busca ou cadastra o veículo\n2. Valida KM (deve ser maior que o último registrado)\n3. Insere registro em `combustivel_request`\n4. Envia solicitação para API BestDrive\n5. Confirma transação\n\n**Campos obrigatórios:**\n- veiculo: ID do veículo (BestDrive ou local)\n- km: Quilometragem atual\n- litro: Quantidade de litros solicitada\n- id_aprovador: ID do aprovador\n- id_solicitante: ID do solicitante\n- tipo_combustivel: Tipo (Gasolina, Etanol, Diesel)\n- departamento: ID do departamento\n- tanquecheio: Boolean indicando se é abastecimento completo\n- placa, modelo, marca, ano: Dados do veículo\n\n**Retorno:**\n- Status 201: Solicitação criada com sucesso\n- Status 400: Payload inválido ou KM menor que o último registrado\n- Status 500: Erro no processo ou falha na integração BestDrive"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisições (Por Aprovador)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/frota/getFrotaPendente/55?page=1&pageSize=2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frota", "getFrotaPendente", "55"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Requisições (Por Solicitante)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/frota/getFrotaPendenteSolicitante/6?page=1&pageSize=2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frota", "getFrotaPendenteSolicitante", "6"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Solicitação por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/frota/getSolicitacaoFrotaById/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frota", "getSolicitacaoFrotaById", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "ID da solicitação"
+                }
+              ]
+            },
+            "description": "Busca detalhes completos de uma solicitação específica de abastecimento.\n\n**Retorna dados completos:**\n- id, veiculo_id, km_veiculo, quantidade_litros\n- data_solicitacao, data_aprovacao\n- id_solicitante, id_aprovador\n- status, tipo_combustivel, impresso\n- tanque_cheio: Convertido para boolean\n- nome_solicitante: Nome completo do solicitante\n- nome_aprovador: Nome completo do aprovador\n- modelo, placa: Dados do veículo\n- departamento_nome: Nome do departamento\n\n**Joins realizados:**\n- Funcionarios (f1): Solicitante\n- Funcionarios (f2): Aprovador\n- veiculos (v): Dados do veículo\n- Departamentos (d): Dados do departamento\n\n**Ordenação:**\n- Por data_solicitacao DESC (mais recentes primeiro)\n\n**Parâmetro obrigatório:**\n- id: ID da solicitação (path parameter)\n\n**Validação:**\n- ID deve ser um número válido e maior que zero"
+          },
+          "response": []
+        },
+        {
+          "name": "Aprovar ou Recusar Solicitação",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"aprovado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/frota/resRequestFrota/:id_requisicao",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frota", "resRequestFrota", ":id_requisicao"],
+              "variable": [
+                {
+                  "key": "id_requisicao",
+                  "value": "1",
+                  "description": "ID da requisição"
+                }
+              ]
+            },
+            "description": "Permite aprovar ou recusar uma solicitação de abastecimento.\n\n**Validações:**\n- Verifica se a solicitação foi aprovada no BestDrive\n- Checa status_res_bestdrive = 'aprovado'\n- Valida se best_drive_res = 1\n\n**Processo de Aprovação (aprovado = true):**\n1. Verifica se BestDrive aprovou a solicitação\n2. Atualiza `aprovado = 1` e `status = 'Aguardando Cupom'`\n3. Confirma transação\n\n**Processo de Recusa (aprovado = false):**\n1. Se BestDrive já aprovou mas diretor reprova: apenas marca status = 'Reprovado'\n2. Se BestDrive não aprovou: retorna erro solicitando liberação no BestDrive\n\n**Campos obrigatórios:**\n- id_requisicao: ID da requisição (path parameter)\n- aprovado: Boolean indicando aprovação (true) ou recusa (false)\n\n**Retorno:**\n- Status 200: Resposta registrada com sucesso\n- Status 400: ID inválido\n- Status 500: Erro no processo ou solicitação não liberada no BestDrive\n\n**Importante:** A solicitação deve estar aprovada no BestDrive antes de ser aprovada no sistema."
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar Como Impresso",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/frota/printFrotaRequests/:id_requisicao",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frota", "printFrotaRequests", ":id_requisicao"],
+              "variable": [
+                {
+                  "key": "id_requisicao",
+                  "value": "1",
+                  "description": "ID da requisição"
+                }
+              ]
+            },
+            "description": "Marca uma solicitação de frota como impressa e atualiza seu status.\n\n**Processo:**\n1. Chama serviço de impressão (printRequestsService)\n2. Atualiza tabela combustivel_request:\n   - Define `impresso = TRUE`\n   - Altera `status = 'Aguardando Cupom'`\n3. Confirma transação\n\n**Parâmetro obrigatório:**\n- id_requisicao: ID da requisição (path parameter)\n\n**Validação:**\n- ID deve ser um número válido e maior que zero\n\n**Retorno:**\n- Status 200: Status de impressão atualizado com sucesso\n- Status 400: ID da requisição inválido\n- Status 500: Erro ao atualizar status de impressão\n\n**Importante:** Este endpoint é chamado após a impressão física do documento de abastecimento."
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar Cupom Fiscal",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "imagePath",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/frota/registerCupom/:id_requisicao",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frota", "registerCupom", ":id_requisicao"],
+              "variable": [
+                {
+                  "key": "id_requisicao",
+                  "value": "1",
+                  "description": "ID da requisição"
+                }
+              ]
+            },
+            "description": "Recebe imagem do cupom fiscal, analisa com IA e registra informações do abastecimento.\n\n**Processo:**\n1. Recebe upload de imagem (max 5MB)\n2. Envia imagem para análise com Google AI\n3. Extrai dados do cupom:\n   - litros: Quantidade abastecida\n   - valor_por_litro: Preço unitário\n   - valor_total: Valor total pago\n4. Valida dados extraídos (devem ser numéricos válidos)\n5. Atualiza tabela combustivel_request:\n   - Define litros_cupom, valor_por_litro_cupom, valor_total_cupom\n   - Altera status = 'Finalizado'\n6. Remove arquivo temporário\n7. Confirma transação\n\n**Parâmetro obrigatório:**\n- id_requisicao: ID da requisição (path parameter)\n\n**Form-data obrigatório:**\n- imagePath: Arquivo de imagem do cupom (campo file)\n\n**Validações:**\n- ID da requisição válido\n- Arquivo deve ser enviado\n- Imagem deve ser menor que 5MB\n- Análise da IA deve retornar dados válidos\n\n**Retorno Success:**\n```json\n{\n  \"sucesso\": true,\n  \"message\": \"Informações do cupom registradas com sucesso.\",\n  \"resultado\": {\n    \"litros\": 50.5,\n    \"valor_por_litro\": 5.89,\n    \"valor_total\": 297.45\n  }\n}\n```\n\n**Retorno Error:**\n```json\n{\n  \"sucesso\": false,\n  \"error\": \"Mensagem de erro\"\n}\n```\n\n**Importante:** Este é o último passo do fluxo de abastecimento. Após registrar o cupom, a solicitação é marcada como 'Finalizada'."
+          },
+          "response": []
+        },
+        {
+          "name": "Busca Carros no BestDrive",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/apiBestDrive/getCars",
+              "host": ["{{base_url}}"],
+              "path": ["api", "apiBestDrive", "getCars"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Departamentos",
+      "item": [
+        {
+          "name": "Listar todos os Departamentos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/departamentos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "departamentos"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Aprovadores",
+      "item": [
+        {
+          "name": "Lista Diretores e Gerentes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/aprovers/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "aprovers", ""]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Para usar, voce deve passar no params os tipos:\n\n- diretoria - puxar somente diretores\n    \n- gerentes - puxar somente gerentes\n    \n- aprovadores - puxar ambos ( Gerente e Diretoria)"
+    },
+    {
+      "name": "Hash",
+      "item": [
+        {
+          "name": "Lista o hash da requisição",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"hash\": \"8cff6e7b21c229f990378bbd717d6f21\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hash/buscar",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hash", "buscar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rota usada para validar o hash da requisição",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"hash\": \"8cff6e7b21c229f990378bbd717d6f21\",\r\n    \"funcionario_id\": \"35\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hash/atualizarUso",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hash", "atualizarUso"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Impressão",
+      "item": [
+        {
+          "name": "Envia documentos para serem impressos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id_requisicao\": 22,\r\n  \"nametable\": \"combustivel_request\",\r\n  \"printer_ip\": \"211.2.100.137\",\r\n  \"file_url\": \"http://211.2.100.58/pdfs/nf_locadora.pdf\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/printer/sendAgent",
+              "host": ["{{base_url}}"],
+              "path": ["api", "printer", "sendAgent"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar todas as impressoras disponiveis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/printer/getPrinter",
+              "host": ["{{base_url}}"],
+              "path": ["api", "printer", "getPrinter"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "BestDrive API",
+      "item": [
+        {
+          "name": "Recupera historico do carro",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/apiBestDrive/getHistory/40",
+              "host": ["{{base_url}}"],
+              "path": ["api", "apiBestDrive", "getHistory", "40"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rotas do Consumo",
+      "item": [
+        {
+          "name": "Mostra dinamicamente filtros para visualizar o consumo dos carros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/calculateConsumo/edit?veiculo_id=55",
+              "host": ["{{base_url}}"],
+              "path": ["api", "calculateConsumo", "edit"],
+              "query": [
+                {
+                  "key": "veiculo_id",
+                  "value": "55"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista todos os veiculos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Master",
+      "item": [
+        {
+          "name": "GET - Listar Requisições",
+          "item": [
+            {
+              "name": "Listar Despesas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes?modulo=despesas&page=1&pageSize=20&status=Pendente",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "master", "requisicoes"],
+                  "query": [
+                    {
+                      "key": "modulo",
+                      "value": "despesas",
+                      "description": "Módulo obrigatório"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1",
+                      "description": "Página (opcional)"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "20",
+                      "description": "Itens por página (opcional)"
+                    },
+                    {
+                      "key": "status",
+                      "value": "Pendente",
+                      "description": "Filtro de status (opcional)"
+                    },
+                    {
+                      "key": "search",
+                      "value": "",
+                      "description": "Busca textual (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "dataInicio",
+                      "value": "",
+                      "description": "Filtro por data inicial (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Lista todas as requisições de despesas. Master vê TODAS as requisições (não filtradas por aprovador)."
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Combustível Frota",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes?modulo=combustivel-frota&page=1&pageSize=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "master", "requisicoes"],
+                  "query": [
+                    {
+                      "key": "modulo",
+                      "value": "combustivel-frota"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "20"
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Lista todas as requisições de combustível frota."
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Combustível Estoque",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes?modulo=combustivel-estoque&page=1&pageSize=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "master", "requisicoes"],
+                  "query": [
+                    {
+                      "key": "modulo",
+                      "value": "combustivel-estoque"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "Lista todas as requisições de combustível estoque."
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Estoque",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes?modulo=estoque&page=1&pageSize=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "master", "requisicoes"],
+                  "query": [
+                    {
+                      "key": "modulo",
+                      "value": "estoque"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "Lista todas as requisições de estoque."
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Clientes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes?modulo=cliente&page=1&pageSize=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "master", "requisicoes"],
+                  "query": [
+                    {
+                      "key": "modulo",
+                      "value": "cliente"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "Lista todas as requisições de cliente."
+              },
+              "response": []
+            }
+          ],
+          "description": "Endpoints GET para listar requisições por módulo com filtros server-side"
+        },
+        {
+          "name": "GET - Buscar por ID",
+          "item": [
+            {
+              "name": "Buscar Despesa por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes/despesas/:id",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "master", "requisicoes", "despesas", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "123",
+                      "description": "ID da requisição"
+                    }
+                  ]
+                },
+                "description": "Busca detalhes completos de uma requisição de despesas."
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Combustível Frota por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes/combustivel-frota/:id",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "requisicoes",
+                    "combustivel-frota",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "456"
+                    }
+                  ]
+                },
+                "description": "Busca detalhes de uma requisição de combustível frota."
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Combustível Estoque por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes/combustivel-estoque/:id",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "requisicoes",
+                    "combustivel-estoque",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "789"
+                    }
+                  ]
+                },
+                "description": "Busca detalhes de uma requisição de combustível estoque."
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Estoque por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes/estoque/:id",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "master", "requisicoes", "estoque", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "321"
+                    }
+                  ]
+                },
+                "description": "Busca detalhes de uma requisição de estoque."
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Cliente por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/master/requisicoes/cliente/:id",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "master", "requisicoes", "cliente", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "654"
+                    }
+                  ]
+                },
+                "description": "Busca detalhes de uma requisição de cliente."
+              },
+              "response": []
+            }
+          ],
+          "description": "Endpoints GET para buscar requisições específicas por ID e módulo"
+        },
+        {
+          "name": "POST - Despesas",
+          "item": [
+            {
+              "name": "Aprovar como Gerente",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/master/despesas/aprovar-gerente/:id_requisicao/:id_cota",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "despesas",
+                    "aprovar-gerente",
+                    ":id_requisicao",
+                    ":id_cota"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "123",
+                      "description": "ID da requisição de despesas"
+                    },
+                    {
+                      "key": "id_cota",
+                      "value": "456",
+                      "description": "ID da cota relacionada"
+                    }
+                  ]
+                },
+                "description": "Master aprova despesas como gerente, sobrescrevendo aprovadores faltantes."
+              },
+              "response": []
+            },
+            {
+              "name": "Aprovar como Diretor",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/master/despesas/aprovar-diretor/:id_requisicao/:id_cota",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "despesas",
+                    "aprovar-diretor",
+                    ":id_requisicao",
+                    ":id_cota"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "1976"
+                    },
+                    {
+                      "key": "id_cota",
+                      "value": "456"
+                    }
+                  ]
+                },
+                "description": "Master aprova despesas como diretor (aprovação final)."
+              },
+              "response": []
+            },
+            {
+              "name": "Recusar Despesas",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"motivo\": \"Orçamento excedido para este mês\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/master/despesas/recusar/:id_requisicao",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "despesas",
+                    "recusar",
+                    ":id_requisicao"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "123"
+                    }
+                  ]
+                },
+                "description": "Master recusa despesas com motivo opcional."
+              },
+              "response": []
+            }
+          ],
+          "description": "Endpoints POST para gerenciar despesas"
+        },
+        {
+          "name": "POST - Combustível Frota",
+          "item": [
+            {
+              "name": "Aprovar Combustível Frota",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/master/combustivel-frota/aprovar/:id_requisicao",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "combustivel-frota",
+                    "aprovar",
+                    ":id_requisicao"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "789"
+                    }
+                  ]
+                },
+                "description": "Master aprova combustível frota. IMPORTANTE: BestDrive deve ter aprovado primeiro (best_drive_res = TRUE, status_res_bestdrive = 'aprovado')."
+              },
+              "response": []
+            },
+            {
+              "name": "Recusar Combustível Frota",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"motivo\": \"Veículo em manutenção\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/master/combustivel-frota/recusar/:id_requisicao",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "combustivel-frota",
+                    "recusar",
+                    ":id_requisicao"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "789"
+                    }
+                  ]
+                },
+                "description": "Master recusa combustível frota. Validações BestDrive também se aplicam."
+              },
+              "response": []
+            }
+          ],
+          "description": "Endpoints POST para gerenciar combustível frota (com validação BestDrive obrigatória)"
+        },
+        {
+          "name": "POST - Combustível Estoque",
+          "item": [
+            {
+              "name": "Aprovar Combustível Estoque",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/master/combustivel-estoque/aprovar/:id_requisicao",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "combustivel-estoque",
+                    "aprovar",
+                    ":id_requisicao"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "321"
+                    }
+                  ]
+                },
+                "description": "Master aprova combustível estoque."
+              },
+              "response": []
+            },
+            {
+              "name": "Recusar Combustível Estoque",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"motivo\": \"Estoque insuficiente\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/master/combustivel-estoque/recusar/:id_requisicao",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "combustivel-estoque",
+                    "recusar",
+                    ":id_requisicao"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "321"
+                    }
+                  ]
+                },
+                "description": "Master recusa combustível estoque."
+              },
+              "response": []
+            }
+          ],
+          "description": "Endpoints POST para gerenciar combustível estoque"
+        },
+        {
+          "name": "POST - Estoque",
+          "item": [
+            {
+              "name": "Aprovar Estoque",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/master/estoque/aprovar/:id_requisicao",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "estoque",
+                    "aprovar",
+                    ":id_requisicao"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "654"
+                    }
+                  ]
+                },
+                "description": "Master aprova requisição de estoque."
+              },
+              "response": []
+            },
+            {
+              "name": "Recusar Estoque",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"motivo\": \"Item descontinuado\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/master/estoque/recusar/:id_requisicao",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "estoque",
+                    "recusar",
+                    ":id_requisicao"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "654"
+                    }
+                  ]
+                },
+                "description": "Master recusa requisição de estoque."
+              },
+              "response": []
+            }
+          ],
+          "description": "Endpoints POST para gerenciar estoque"
+        },
+        {
+          "name": "POST - Cliente",
+          "item": [
+            {
+              "name": "Aprovar Cliente",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/master/cliente/aprovar/:id_requisicao",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "cliente",
+                    "aprovar",
+                    ":id_requisicao"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "987"
+                    }
+                  ]
+                },
+                "description": "Master aprova requisição de cliente."
+              },
+              "response": []
+            },
+            {
+              "name": "Recusar Cliente",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"motivo\": \"Documentação incompleta\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/master/cliente/recusar/:id_requisicao",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "master",
+                    "cliente",
+                    "recusar",
+                    ":id_requisicao"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_requisicao",
+                      "value": "987"
+                    }
+                  ]
+                },
+                "description": "Master recusa requisição de cliente."
+              },
+              "response": []
+            }
+          ],
+          "description": "Endpoints POST para gerenciar clientes"
+        }
+      ],
+      "description": "Endpoints Master - Usuários com permissão master=1 podem aprovar/recusar requisições de todos os módulos. GET para listar/buscar requisições com filtros. POST para aprovar/recusar. IMPORTANTE: Combustível Frota requer aprovação BestDrive primeiro.",
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Master requer autenticação JWT e flag master=1",
+              "// Certifique-se de fazer login primeiro"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Relatórios",
+      "item": [
+        {
+          "name": "Estoque",
+          "item": [
+            {
+              "name": "Valor Compra x Venda",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/estoque/valor-compra-venda?dataInicio=2025-01-01&dataFim=2025-12-31&tipo_periodo=mes",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "estoque",
+                    "valor-compra-venda"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "tipo_periodo",
+                      "value": "mes",
+                      "description": "Agrupamento: dia, semana, mes, ano (opcional)"
+                    },
+                    {
+                      "key": "fornecedor",
+                      "value": "",
+                      "description": "Filtrar por fornecedor (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "item",
+                      "value": "",
+                      "description": "Filtrar por item (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "solicitante",
+                      "value": "",
+                      "description": "ID do solicitante (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna comparativo entre valores de compra e venda com cálculo de margem e percentual."
+              },
+              "response": []
+            },
+            {
+              "name": "Valor de Frete",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/estoque/valor-frete?dataInicio=2025-01-01&dataFim=2025-12-31&tipo_periodo=mes",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "estoque", "valor-frete"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "tipo_periodo",
+                      "value": "mes",
+                      "description": "Agrupamento: dia, semana, mes, ano (opcional)"
+                    },
+                    {
+                      "key": "fornecedor",
+                      "value": "",
+                      "description": "Filtrar por fornecedor (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna valor total de frete e média por requisição, agrupado por período."
+              },
+              "response": []
+            },
+            {
+              "name": "Requisições por Solicitante",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/estoque/por-solicitante?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "estoque", "por-solicitante"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "solicitante",
+                      "value": "",
+                      "description": "ID do solicitante específico (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna quantidade de requisições, valores de compra e venda por solicitante."
+              },
+              "response": []
+            },
+            {
+              "name": "Entregas Diretas por Período",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/estoque/entregas-diretas?dataInicio=2025-01-01&dataFim=2025-12-31&tipo_periodo=mes",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "estoque", "entregas-diretas"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "tipo_periodo",
+                      "value": "mes",
+                      "description": "Agrupamento: dia, semana, mes, ano (opcional)"
+                    },
+                    {
+                      "key": "fornecedor",
+                      "value": "",
+                      "description": "Filtrar por fornecedor (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna quantidade de entregas diretas agrupadas por período."
+              },
+              "response": []
+            },
+            {
+              "name": "Entregas Diretas por Item",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/estoque/entregas-diretas-por-item?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "estoque",
+                    "entregas-diretas-por-item"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "item",
+                      "value": "",
+                      "description": "Filtrar por nome do item (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna entregas diretas agrupadas por descrição do item."
+              },
+              "response": []
+            },
+            {
+              "name": "Resumo Geral",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/estoque/resumo-geral?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "estoque", "resumo-geral"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "fornecedor",
+                      "value": "",
+                      "description": "Filtrar por fornecedor (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna resumo completo com totais gerais e top 10 solicitantes."
+              },
+              "response": []
+            },
+            {
+              "name": "Todas as Requisições",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/estoque/todas?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "estoque", "todas"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "fornecedor",
+                      "value": "",
+                      "description": "Filtrar por fornecedor (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "solicitante",
+                      "value": "",
+                      "description": "ID do solicitante (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna todas as requisições de estoque aprovadas com detalhes completos incluindo fornecedor, valores, datas, solicitante, aprovador e status."
+              },
+              "response": []
+            },
+            {
+              "name": "Gerar PDF de Relatórios",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"relatorios\": [\"valorCompraVenda\", \"valorFrete\", \"porSolicitante\", \"entregasDiretas\", \"resumoGeral\", \"todas\"],\n  \"dataInicio\": \"2025-01-01\",\n  \"dataFim\": \"2025-12-31\",\n  \"tipo_periodo\": \"mes\",\n  \"fornecedor\": \"\",\n  \"solicitante\": null,\n  \"entregaDireta\": null\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/estoque/gerar-pdf",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "estoque", "gerar-pdf"]
+                },
+                "description": "Gera e retorna um arquivo PDF consolidado com os relatórios selecionados para download.\n\nRETORNO: Arquivo PDF (application/pdf)\n\nParâmetros obrigatórios:\n- relatorios: array com os relatórios desejados\n- dataInicio: data inicial (formato YYYY-MM-DD)\n- dataFim: data final (formato YYYY-MM-DD)\n\nParâmetros opcionais:\n- tipo_periodo: agrupamento (dia, semana, mes, ano)\n- fornecedor: filtrar por fornecedor específico\n- solicitante: ID do solicitante\n- entregaDireta: filtrar por entrega direta (true/false)\n\nRelatórios disponíveis: valorCompraVenda, valorFrete, porSolicitante, entregasDiretas, resumoGeral, todas"
+              },
+              "response": []
+            }
+          ],
+          "description": "Relatórios de estoque com insights sobre compras, vendas, frete, itens e entregas diretas. Todos os endpoints requerem autenticação.",
+          "auth": {
+            "type": "inherit"
+          }
+        },
+        {
+          "name": "Combustível Estoque",
+          "item": [
+            {
+              "name": "Consumo por Veículo",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/combustivel-estoque/consumo-por-veiculo?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "combustivel-estoque",
+                    "consumo-por-veiculo"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "placa",
+                      "value": "",
+                      "description": "Filtrar por placa (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "chassi",
+                      "value": "",
+                      "description": "Filtrar por chassi (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "marca",
+                      "value": "",
+                      "description": "Filtrar por marca (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "tipo_combustivel",
+                      "value": "",
+                      "description": "Filtrar por tipo de combustível (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna análise de consumo de combustível por veículo (placa/chassi), com total de litros, quantidade de requisições e médias."
+              },
+              "response": []
+            },
+            {
+              "name": "Análise Temporal",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/combustivel-estoque/analise-temporal?dataInicio=2025-01-01&dataFim=2025-12-31&tipo_periodo=mes",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "combustivel-estoque",
+                    "analise-temporal"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório)"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório)"
+                    },
+                    {
+                      "key": "tipo_periodo",
+                      "value": "mes",
+                      "description": "Agrupamento: dia, semana, mes, ano"
+                    }
+                  ]
+                },
+                "description": "Análise temporal de consumo agrupada por período (dia/semana/mês/ano)."
+              },
+              "response": []
+            },
+            {
+              "name": "Por Tipo de Combustível",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/combustivel-estoque/por-tipo-combustivel?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "combustivel-estoque",
+                    "por-tipo-combustivel"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31"
+                    }
+                  ]
+                },
+                "description": "Análise de consumo por tipo de combustível (Gasolina, Diesel, Etanol) com percentuais."
+              },
+              "response": []
+            },
+            {
+              "name": "Por Departamento",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/combustivel-estoque/por-departamento?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "combustivel-estoque",
+                    "por-departamento"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31"
+                    }
+                  ]
+                },
+                "description": "Análise de consumo de combustível por departamento."
+              },
+              "response": []
+            },
+            {
+              "name": "Por Solicitante",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/combustivel-estoque/por-solicitante?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "combustivel-estoque",
+                    "por-solicitante"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31"
+                    }
+                  ]
+                },
+                "description": "Ranking de solicitantes com maior consumo de combustível."
+              },
+              "response": []
+            },
+            {
+              "name": "Por Marca/Modelo",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/combustivel-estoque/por-marca-modelo?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "combustivel-estoque",
+                    "por-marca-modelo"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31"
+                    }
+                  ]
+                },
+                "description": "Análise de consumo por marca e modelo de veículo."
+              },
+              "response": []
+            },
+            {
+              "name": "Resumo Geral",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/combustivel-estoque/resumo-geral?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "combustivel-estoque",
+                    "resumo-geral"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31"
+                    }
+                  ]
+                },
+                "description": "Resumo geral consolidado com totais, médias e top 10."
+              },
+              "response": []
+            },
+            {
+              "name": "Todas as Requisições",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/combustivel-estoque/todas?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "combustivel-estoque", "todas"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31"
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "description": "Filtrar por status (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Listagem completa de todas as requisições de combustível com detalhes."
+              },
+              "response": []
+            },
+            {
+              "name": "Gerar PDF de Relatórios",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"relatorios\": [\"consumoPorVeiculo\", \"analiseTemporal\", \"porTipoCombustivel\", \"porDepartamento\", \"porSolicitante\", \"resumoGeral\", \"todas\"],\n  \"dataInicio\": \"2025-01-01\",\n  \"dataFim\": \"2025-12-31\",\n  \"tipo_periodo\": \"mes\",\n  \"tipo_combustivel\": \"\",\n  \"departamento\": null,\n  \"placa\": \"\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/combustivel-estoque/gerar-pdf",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "combustivel-estoque",
+                    "gerar-pdf"
+                  ]
+                },
+                "description": "Gera e retorna um arquivo PDF consolidado com os relatórios de combustível estoque selecionados para download.\n\nRETORNO: Arquivo PDF (application/pdf)\n\nParâmetros obrigatórios:\n- relatorios: array com os relatórios desejados\n- dataInicio: data inicial (formato YYYY-MM-DD)\n- dataFim: data final (formato YYYY-MM-DD)\n\nParâmetros opcionais:\n- tipo_periodo: agrupamento (dia, semana, mes, ano)\n- tipo_combustivel: filtrar por tipo específico\n- departamento: ID do departamento\n- placa: filtrar por placa\n- chassi: filtrar por chassi\n- marca: filtrar por marca\n- modelo: filtrar por modelo\n\nRelatórios disponíveis: consumoPorVeiculo, analiseTemporal, porTipoCombustivel, porDepartamento, porSolicitante, porMarcaModelo, resumoGeral, todas"
+              },
+              "response": []
+            }
+          ],
+          "description": "Relatórios analíticos de combustível estoque com insights sobre consumo por veículo, solicitante, departamento, tipo de combustível e análises temporais. Todos os endpoints requerem autenticação.",
+          "auth": {
+            "type": "inherit"
+          }
+        },
+        {
+          "name": "Cliente",
+          "item": [
+            {
+              "name": "Todas as Requisições",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/cliente/todas?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "cliente", "todas"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31"
+                    },
+                    {
+                      "key": "solicitante",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "aprovador",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna todas as requisições de cliente aprovadas com detalhes completos incluindo descrição, valor, datas, solicitante, aprovador e status."
+              },
+              "response": []
+            },
+            {
+              "name": "Gerar PDF de Relatórios",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"dataInicio\": \"2025-01-01\",\n  \"dataFim\": \"2025-12-31\",\n  \"solicitante\": null,\n  \"aprovador\": null,\n  \"status\": null\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/cliente/gerar-pdf",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "cliente", "gerar-pdf"]
+                },
+                "description": "Gera e retorna um arquivo PDF com todas as requisições de cliente para download.\n\nRETORNO: Arquivo PDF (application/pdf)\n\nParâmetros obrigatórios:\n- dataInicio: data inicial (formato YYYY-MM-DD)\n- dataFim: data final (formato YYYY-MM-DD)\n\nParâmetros opcionais:\n- solicitante: ID do solicitante\n- aprovador: ID do aprovador\n- status: filtrar por status (Pendente, Aprovado, Reprovado)"
+              },
+              "response": []
+            }
+          ],
+          "description": "Relatórios de requisições de cliente com detalhes sobre valores, datas e status. Todos os endpoints requerem autenticação.",
+          "auth": {
+            "type": "inherit"
+          }
+        },
+        {
+          "name": "Despesas",
+          "item": [
+            {
+              "name": "Análise Temporal",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/despesas/analise-temporal?dataInicio=2025-01-01&dataFim=2025-12-31&tipo_periodo=mes",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "despesas", "analise-temporal"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "tipo_periodo",
+                      "value": "mes",
+                      "description": "Agrupamento: dia, semana, mes, ano (opcional)"
+                    },
+                    {
+                      "key": "solicitante",
+                      "value": "",
+                      "description": "ID do solicitante (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "aprovador",
+                      "value": "",
+                      "description": "ID do aprovador (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "departamento",
+                      "value": "",
+                      "description": "ID do departamento (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "description": "Status: Pendente, Aprovada, Reprovada (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna análise temporal das requisições de despesas agrupadas por período, com contagem de aprovadas/reprovadas, valor total e ticket médio."
+              },
+              "response": []
+            },
+            {
+              "name": "Gastos por Departamento",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/despesas/gastos-por-departamento?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "despesas",
+                    "gastos-por-departamento"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "solicitante",
+                      "value": "",
+                      "description": "ID do solicitante (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "aprovador",
+                      "value": "",
+                      "description": "ID do aprovador (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "description": "Status: Pendente, Aprovada, Reprovada (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna análise de gastos agrupados por departamento, incluindo total de requisições, valor total, ticket médio, número de solicitantes únicos e ranking dos top 3 solicitantes de cada departamento."
+              },
+              "response": []
+            },
+            {
+              "name": "Comparativo de Cotações",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/despesas/comparativo-cotacoes?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": [
+                    "api",
+                    "relatorios",
+                    "despesas",
+                    "comparativo-cotacoes"
+                  ],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "solicitante",
+                      "value": "",
+                      "description": "ID do solicitante (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "aprovador",
+                      "value": "",
+                      "description": "ID do aprovador (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "departamento",
+                      "value": "",
+                      "description": "ID do departamento (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna requisições com múltiplas cotações, mostrando menor valor, maior valor, economia gerada, percentual de economia e fornecedor escolhido. Ordenado por maior economia."
+              },
+              "response": []
+            },
+            {
+              "name": "Resumo Geral",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/despesas/resumo-geral?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "despesas", "resumo-geral"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "solicitante",
+                      "value": "",
+                      "description": "ID do solicitante (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "aprovador",
+                      "value": "",
+                      "description": "ID do aprovador (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "departamento",
+                      "value": "",
+                      "description": "ID do departamento (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "description": "Status: Pendente, Aprovada, Reprovada (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna resumo geral com totalizadores: total de requisições, aprovadas, reprovadas, pendentes, valor total aprovado, ticket médio e economia total gerada."
+              },
+              "response": []
+            },
+            {
+              "name": "Todas as Requisições",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/despesas/todas?dataInicio=2025-01-01&dataFim=2025-12-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "despesas", "todas"],
+                  "query": [
+                    {
+                      "key": "dataInicio",
+                      "value": "2025-01-01",
+                      "description": "Data inicial (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "dataFim",
+                      "value": "2025-12-31",
+                      "description": "Data final (obrigatório) - formato YYYY-MM-DD"
+                    },
+                    {
+                      "key": "solicitante",
+                      "value": "",
+                      "description": "ID do solicitante (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "aprovador",
+                      "value": "",
+                      "description": "ID do aprovador (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "departamento",
+                      "value": "",
+                      "description": "ID do departamento (opcional)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "description": "Status: Pendente, Aprovada, Reprovada (opcional)",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Retorna todas as requisições de despesas com detalhes completos: data, descrição, departamento, solicitante, status, valor e fornecedor escolhido. Limitado a 500 registros."
+              },
+              "response": []
+            },
+            {
+              "name": "Gerar PDF de Relatórios",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"relatorios\": [\n    \"analise_temporal\",\n    \"gastos_por_departamento\",\n    \"comparativo_cotacoes\",\n    \"todas\"\n  ],\n  \"dataInicio\": \"2025-01-01\",\n  \"dataFim\": \"2025-12-31\",\n  \"tipo_periodo\": \"mes\",\n  \"solicitante\": null,\n  \"aprovador\": null,\n  \"departamento\": null,\n  \"status\": null\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/relatorios/despesas/gerar-pdf",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "relatorios", "despesas", "gerar-pdf"]
+                },
+                "description": "Gera e retorna um arquivo PDF consolidado com os relatórios de despesas selecionados.\n\nRETORNO: Arquivo PDF (application/pdf)\n\nParâmetros obrigatórios:\n- relatorios: array com os relatórios desejados [\"analise_temporal\", \"gastos_por_departamento\", \"comparativo_cotacoes\", \"todas\"]\n- dataInicio: data inicial (formato YYYY-MM-DD)\n- dataFim: data final (formato YYYY-MM-DD)\n\nParâmetros opcionais:\n- tipo_periodo: agrupamento temporal (dia, semana, mes, ano)\n- solicitante: ID do solicitante\n- aprovador: ID do aprovador\n- departamento: ID do departamento\n- status: filtrar por status (Pendente, Aprovada, Reprovada)"
+              },
+              "response": []
+            }
+          ],
+          "description": "Relatórios de despesas (requisições) com análises de gastos por departamento, top solicitantes, comparativo de cotações e economia gerada. Tema roxo. Todos os endpoints requerem autenticação.",
+          "auth": {
+            "type": "inherit"
+          }
+        }
+      ],
+      "description": "Relatórios analíticos do sistema SMARTCOMPRAS"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "sandboxsmart.francautolabs.com.br"
+    }
+  ]
+}
+
+            {
+              "name": "1. Eficiência Energética",
+              "item": [
+                {
+                  "name": "Eficiência por Veículo",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/eficiencia/por-veiculo?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "eficiencia",
+                        "por-veiculo"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        },
+                        {
+                          "key": "veiculo_id",
+                          "value": null,
+                          "disabled": true
+                        },
+                        {
+                          "key": "modelo",
+                          "value": null,
+                          "disabled": true
+                        },
+                        {
+                          "key": "marca",
+                          "value": null,
+                          "disabled": true
+                        }
+                      ]
+                    },
+                    "description": "Retorna eficiência (km/L) por veículo com total de km rodados e litros consumidos"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eficiência por Tipo Combustível",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/eficiencia/por-tipo-combustivel?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "eficiencia",
+                        "por-tipo-combustivel"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Retorna eficiência média por tipo de combustível (Álcool, Gasolina, Diesel)"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eficiência por Modelo",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/eficiencia/por-modelo?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "eficiencia",
+                        "por-modelo"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Comparação de eficiência entre modelos/marcas (Polo, Virtus, T-Cross, etc)"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Tendência de Eficiência",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/eficiencia/tendencia?data_inicio=2025-11-01&data_fim=2025-12-31&periodo=mes",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "eficiencia",
+                        "tendencia"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        },
+                        {
+                          "key": "periodo",
+                          "value": "mes",
+                          "description": "dia, semana, mes, ano"
+                        }
+                      ]
+                    },
+                    "description": "Tendência de eficiência ao longo do tempo (degradação)"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "2. Análise de Custos",
+              "item": [
+                {
+                  "name": "Custo por Veículo",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/custos/por-veiculo?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "custos",
+                        "por-veiculo"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Total gasto, custo por km e custo por litro por veículo"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Custo por Departamento",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/custos/por-departamento?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "custos",
+                        "por-departamento"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Gastos totais por departamento"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Evolução de Preço",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/custos/evolucao-preco?data_inicio=2025-11-01&data_fim=2025-12-31&periodo=mes",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "custos",
+                        "evolucao-preco"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        },
+                        {
+                          "key": "periodo",
+                          "value": "mes"
+                        }
+                      ]
+                    },
+                    "description": "Evolução do preço do combustível ao longo do tempo (inflação)"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Projeção de Gastos",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/custos/projecao?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "custos",
+                        "projecao"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Projeção de gastos para 30, 90 dias com análise de tendência"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "3. Comportamento de Abastecimento",
+              "item": [
+                {
+                  "name": "Comportamento por Veículo",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/comportamento/abastecimento?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "comportamento",
+                        "abastecimento"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Frequência, intervalos, % tanque cheio por veículo"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Padrão Semanal",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/comportamento/padrao-semanal?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "comportamento",
+                        "padrao-semanal"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Quais dias da semana mais se abastece"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Detecção de Anomalias",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/comportamento/anomalias?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "comportamento",
+                        "anomalias"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Detecta consumo excessivo, múltiplos abastecimentos, divergências, preços atípicos"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "4. Desempenho da Frota",
+              "item": [
+                {
+                  "name": "Ranking de Veículos",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/desempenho/ranking?data_inicio=2025-11-01&data_fim=2025-12-31&metrica=eficiencia&limite=10",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "desempenho",
+                        "ranking"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        },
+                        {
+                          "key": "metrica",
+                          "value": "eficiencia",
+                          "description": "eficiencia, custo_total, custo_km"
+                        },
+                        {
+                          "key": "limite",
+                          "value": "10"
+                        }
+                      ]
+                    },
+                    "description": "Top 10 veículos por eficiência, custo total ou custo/km"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Comparação de Modelos",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/desempenho/comparacao-modelos?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "desempenho",
+                        "comparacao-modelos"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Benchmarking entre modelos (Polo vs Virtus vs T-Cross)"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Correlação Ano x Eficiência",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/desempenho/correlacao-ano?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "desempenho",
+                        "correlacao-ano"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Correlação entre ano do veículo e eficiência (novos vs antigos)"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "5. Quilometragem",
+              "item": [
+                {
+                  "name": "Quilometragem por Veículo",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/quilometragem/por-veiculo?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "quilometragem",
+                        "por-veiculo"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Total km rodados e média km/dia por veículo"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Projeção de Quilometragem",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/quilometragem/projecao?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "quilometragem",
+                        "projecao"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Projeção de quilometragem para 30, 90, 180 dias"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "6. Análise por Departamento",
+              "item": [
+                {
+                  "name": "Consumo por Departamento",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/departamento/consumo?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "departamento",
+                        "consumo"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Consumo e custos por departamento"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Veículos por Departamento",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/departamento/veiculos?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "departamento",
+                        "veiculos"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Veículos mais utilizados por departamento"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "7. Análise por Solicitante",
+              "item": [
+                {
+                  "name": "Eficiência por Solicitante",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/solicitante/eficiencia?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "solicitante",
+                        "eficiencia"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Ranking de motoristas por eficiência e custos"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "8. Análise Temporal",
+              "item": [
+                {
+                  "name": "Consumo Temporal",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/temporal/consumo?data_inicio=2025-11-01&data_fim=2025-12-31&periodo=mes",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "temporal",
+                        "consumo"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        },
+                        {
+                          "key": "periodo",
+                          "value": "mes",
+                          "description": "dia, semana, mes, ano"
+                        }
+                      ]
+                    },
+                    "description": "Evolução de consumo ao longo do tempo"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Sazonalidade",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/temporal/sazonalidade?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": [
+                        "api",
+                        "relatorios",
+                        "frota",
+                        "temporal",
+                        "sazonalidade"
+                      ],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Análise de sazonalidade mensal (variação percentual)"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "9. Resumo Geral",
+              "item": [
+                {
+                  "name": "Resumo Geral da Frota",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/api/relatorios/frota/resumo-geral?data_inicio=2025-11-01&data_fim=2025-12-31",
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "relatorios", "frota", "resumo-geral"],
+                      "query": [
+                        {
+                          "key": "data_inicio",
+                          "value": "2025-01-01"
+                        },
+                        {
+                          "key": "data_fim",
+                          "value": "2025-12-31"
+                        }
+                      ]
+                    },
+                    "description": "Dashboard executivo com KPIs principais, top 5 econômicos/caros e alertas"
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ],
+          "description": "Relatórios analíticos completos da frota com análises de eficiência energética, custos, comportamento de abastecimento, desempenho, quilometragem, departamentos, solicitantes e análises temporais. Todos os endpoints requerem autenticação.",
+          "auth": {
+            "type": "inherit"
+          }
+        }
+      ],
+      "description": "Relatórios analíticos do sistema SMARTCOMPRAS"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "sandboxsmart.francautolabs.com.br"
+    }
+  ]
+}
