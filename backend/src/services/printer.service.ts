@@ -34,15 +34,12 @@ export async function printRequestsAgentService(
     };
     const fileUrl = await geradorPDF(pdf, connection);
     console.log("FILE URL = " + fileUrl);
-    const { data }: any = await axios.post(
-      `http://200.233.210.201:4000/print`,
-      {
-        id_requisicao,
-        tipo: nametable,
-        printer_ip,
-        file_url: fileUrl,
-      }
-    );
+    const { data }: any = await axios.post(`http://211.2.100.245:4005/print`, {
+      id_requisicao,
+      tipo: nametable,
+      printer_ip,
+      file_url: fileUrl,
+    });
 
     const status = data.success ? 1 : 0;
     const msg = data.error || null;
