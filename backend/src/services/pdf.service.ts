@@ -122,12 +122,10 @@ export async function geradorPDF(
       margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" },
     });
 
-    // Retornar URL pública ao invés do caminho local
-    // Usa PDF_BASE_URL para permitir URL diferente em desenvolvimento (IP interno) e produção (domínio)
     const baseUrl =
       process.env.PDF_BASE_URL ||
       process.env.BASE_URL ||
-      "http://localhost:3000";
+      "https://apismartcompras.francautolabs.com.br";
     const publicUrl = `${baseUrl}/pdfs/${fileName}`;
     return publicUrl;
   } catch (error) {

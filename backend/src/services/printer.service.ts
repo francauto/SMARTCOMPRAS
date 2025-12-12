@@ -35,7 +35,7 @@ export async function printRequestsAgentService(
     const fileUrl = await geradorPDF(pdf, connection);
     console.log("FILE URL = " + fileUrl);
     const { data }: any = await axios.post(
-      `https://printer.francautolabs.com.br/print`,
+      `http://200.233.210.201:4000/print`,
       {
         id_requisicao,
         tipo: nametable,
